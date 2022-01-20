@@ -8,6 +8,9 @@ import Login from "./components/Login";
 import Registration from "./components/Registration";
 import Artisian from "./components/Artisian";
 import Hire from "./components/Hire";
+import PrivateRoute from "./layouts/PrivateRoutes";
+import RunningJobs from "./components/Runningjobs";
+import StartJob from "./components/StartJob";
 
 
 const App = () => {
@@ -19,8 +22,10 @@ const App = () => {
         <Route exact path="/contact" component={Contact} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/registration" component={Registration} />
-        <Route exact path="/artisian" component={Artisian} />
-        <Route exact path="/hire" component={Hire} />
+        <PrivateRoute exact path="/artisian" component={Artisian} />
+        <PrivateRoute exact path="/hire" component={Hire} />
+        <PrivateRoute exact path="/running-jobs" component={RunningJobs} />
+        <PrivateRoute exact path="/start-job" component={StartJob} />
       </Switch>
     </BrowserRouter>
   );

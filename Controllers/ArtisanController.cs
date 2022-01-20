@@ -35,7 +35,7 @@ namespace multitier.Controllers {
                         });
                 }
                 {
-                    var newArtisan = new Artisan() { IdentityType = artisan.IdentityType, LicenceNumber = artisan.LicenceNumber, LicencedOrganization = artisan.LicencedOrganization, UserId = artisan.UserId, SkillId = artisan.SkillId};
+                    var newArtisan = new Artisan() { IdentityType = artisan.IdentityType, LicenceNumber = artisan.LicenceNumber, LicencedOrganization = artisan.LicencedOrganization, profileUrl=artisan.profileUrl, Description= artisan.Description, UserId = artisan.UserId, Location= artisan.Location, SkillId = artisan.SkillId };
                     _context.Artisans.Add(newArtisan);
                     await _context.SaveChangesAsync();
                     return CreatedAtAction("Add Artisan", new { id = newArtisan.Id }, newArtisan);
@@ -76,6 +76,37 @@ namespace multitier.Controllers {
             }
 
             return artisan;
+        }
+
+         [HttpPost("location")]
+         public async Task<ActionResult<Artisan>> GetArtisanByLocation([FromBody] SearchByLocationRequest searchByQuery)
+        {
+            var artisan = await _context.Artisans.Include( i => i.Skills).Include(i => i.User).Where(x => x.Location == searchByQuery.location).ToListAsync();
+
+            if (artisan == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(artisan);;
+        }
+
+         [HttpPost]
+         [Route("skills")]
+         public async Task<ActionResult<Skill>> GetArtisanBySkill([FromBody] SKillSearchRequest searchBySkill)
+        {
+            var skillExist = await _context.Skills.SingleAsync(x => x.Title == searchBySkill.skill);
+
+            if(skillExist == null){
+                return NotFound("This skills is not available");
+            }
+            var artisan = await _context.Artisans.Include( i => i.Skills).Include(i => i.User).Where(c => c.SkillId == skillExist.Id).ToListAsync();
+            if (artisan == null)
+            {
+                return NotFound("We does not have any artisan available for this skills");
+            }
+
+            return skillExist;
         }
  
     }

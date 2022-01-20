@@ -12,8 +12,8 @@ using multitier.Data;
 namespace multitier.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20211230220939_Initializing data")]
-    partial class Initializingdata
+    [Migration("20220120013600_InitializeData")]
+    partial class InitializeData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -241,6 +241,10 @@ namespace multitier.Migrations
                     b.Property<DateTime>("DateJoined")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("IdentityType")
                         .IsRequired()
                         .HasColumnType("text");
@@ -253,10 +257,18 @@ namespace multitier.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("SkillId")
                         .HasColumnType("integer");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("profileUrl")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -334,27 +346,6 @@ namespace multitier.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("Jobs");
-                });
-
-            modelBuilder.Entity("multitier.Models.Note", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Notes");
                 });
 
             modelBuilder.Entity("multitier.Models.Skill", b =>

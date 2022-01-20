@@ -8,8 +8,144 @@ import ImageThree from "../assets/images/image3.png";
 import Pointing from "../assets/images/pointing.png";
 import Testimonial from "../assets/images/testimonial.png";
 import Footer from "../layouts/Footer";
+import { getCategories } from "../services/categoryservice";
+import { getArtisan , getArtisanByLocation, getArtisanBySkills} from "../services/artisanservice";
+
 
 const Index = () => {
+
+  const [categories, setCategories] = React.useState(null);
+  const [artisans, setArtisans] = React.useState(null);
+  const [searchBySkillValue, setSearchBySkillValue] = React.useState(null);
+  
+  const loadCategories = async () => {
+    const result = await getCategories();
+    console.log(result);
+    setCategories(result);
+  }
+
+
+  const loadArtisans = async () => {
+    const result =await getArtisan()
+    console.log(result);
+    setArtisans(result);
+  }
+
+  
+  
+
+  const CategoryComponent = () => {
+    return (
+        <>
+        {
+          categories && categories.map(item => (
+            <Link to="/hire" key={`categories${item.id+1}`}>
+                <div className="card">
+                  <div className="container">
+                    <h4>
+                      <b>{item.title}</b>
+                    </h4>
+                    <p>
+                    {item.description}
+                    </p>
+                  
+                  </div>
+              </div>
+            </Link>
+          ))
+        }
+        
+        </>
+        
+    )
+  }
+
+
+  const searchBySkill = async (event) => {
+      if(event.charCode === 13){
+        setSearchBySkillValue(event.target.value);
+        const payload = {
+          skill: event.target.value,
+          
+        }
+       const result = await getArtisanBySkills(payload);
+       if(result.artisans && result.artisans.length){
+         setArtisans(result.artisans);
+       }
+      }
+      return;
+      
+  }
+
+  const searchByLocation = async (event) => {
+    if(event.charCode === 13){
+      console.log("i am pressing");
+      setSearchBySkillValue(event.target.value);
+      const payload = {
+        location: event.target.value,
+      }
+     const result = await getArtisanByLocation(payload);
+     console.log(result);
+     if(result.artisans && result.artisans.length){
+       setArtisans(result.artisans);
+       return;
+     }
+     if(result){
+       setArtisans(result);
+     }
+    }
+    return;
+    
+}
+   
+  const ArtisanComponent = () => {
+    return (
+        <>
+        {
+          artisans && artisans.map(item => (
+            <Link to={{ 
+              pathname: '/hire',
+              state: item.id
+             }} key={`artisan${item.id+1}`} >
+            <div className="card">
+              <img src={ImageOne} alt="Avatar" />
+              <div className="container">
+                <h4>
+                  <b>{item.user.userName && item.user.userName}</b>
+                </h4>
+                <h6>{item.skills.title && item.skills.title}</h6>
+                <p>
+                  {item.description && item.description}
+                </p>
+                <p>
+                  Total Jobs : 
+                  {item.job ? item.job.length : 0}
+                </p>
+                <p>
+                  locations: <b />
+                   {item.location && item.location.toUpperCase()}
+                </p>
+                <p className="card__star">
+                  &#9733;&#9733;&#9733;&#9733;&#9733;
+                </p>
+              </div>
+            </div>
+          </Link>
+          ))
+        }
+        
+        </>
+        
+    )
+  }
+
+
+  React.useEffect(() => {
+    loadCategories()
+    loadArtisans()
+  }, []);
+
+
   return (
     <div>
       <Navbar />
@@ -28,60 +164,27 @@ const Index = () => {
               </p>
 
               <div className="input-section d-none d-md-flex justify-between mt-5">
-                <input type="text" placeholder="search" className="form-control w-50 mr-3" />
-                <input type="text" placeholder="search" className="form-control w-50"  />
+                    <input type="text" placeholder="Search by skills" className="form-control w-50 mr-3" onKeyPress={searchBySkill}/>
+                    <input type="text" placeholder="Search by location" className="form-control w-50" onKeyPress={searchByLocation}  />
               </div>
             </aside>
           </section>
 
           <section className="main__container__feature">
+            <h4> Categories</h4>
+            <div className="main__container__feature__content">
+            <CategoryComponent />              
+            </div>
+          </section>
+
+          <section className="main__container__feature">
             <h4>Featured Artisans</h4>
             <div className="main__container__feature__content">
-              <Link to="/hire">
-                <div className="card">
-                  <img src={ImageOne} alt="Avatar" />
-                  <div className="container">
-                    <h4>
-                      <b>Akodu Yunus</b>
-                    </h4>
-                    <h6>Carpentry</h6>
-                    <p>
-                      Lorem ipsum dolor sit amet,consectetur adipiscing elit.
-                    </p>
-                    <p className="card__star">
-                      &#9733;&#9733;&#9733;&#9733;&#9733;
-                    </p>
-                  </div>
-                </div>
-              </Link>
-
-              <div className="card">
-                <img src={ImageTwo} alt="Avatar" />
-                <div className="container">
-                  <h4>
-                    <b>Histon Bovas</b>
-                  </h4>
-                  <h6>Plumbing</h6>
-                  <p>Lorem ipsum dolor sit amet,consectetur adipiscing elit.</p>
-                  <p className="card__star">
-                    &#9733;&#9733;&#9733;&#9733;&#9733;
-                  </p>
-                </div>
-              </div>
-
-              <div className="card">
-                <img src={ImageThree} alt="Avatar" />
-                <div className="container">
-                  <h4>
-                    <b>Yonne Phillipe</b>
-                  </h4>
-                  <h6>Painting</h6>
-                  <p>Lorem ipsum dolor sit amet,consectetur adipiscing elit.</p>
-                  <p className="card__star">
-                    &#9733;&#9733;&#9733;&#9733;&#9733;
-                  </p>
-                </div>
-              </div>
+             
+            <ArtisanComponent />
+            <ArtisanComponent />
+            <ArtisanComponent />
+              
             </div>
           </section>
 

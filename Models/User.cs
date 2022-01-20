@@ -6,5 +6,7 @@ namespace multitier.Models {
         public Artisan Artisan { get; set; }
 
         public ICollection<Job> Jobs {get; set;}
+
+
     }
 }

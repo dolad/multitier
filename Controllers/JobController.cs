@@ -84,25 +84,24 @@ namespace multitier.Controllers {
         }
 
          // get one art
-         [HttpGet("{userId}/user")]
+         [HttpPost("user")]
           
-         public async Task<ActionResult<Job>> GetUserJobs([FromQuery] string userId)
+         public async Task<ActionResult<IEnumerable<Job>>> GetUserJobs([FromBody] GetJobRequest userId)
         {
-            var artisan = await _context.Jobs.Include( i => i.Artisan).Include(i => i.Users).SingleAsync(x => x.UsersId == userId);
+            var jobs = await _context.Jobs.Include( i => i.Artisan).Include(i => i.Users).Where(x => x.UsersId == userId.userId).ToListAsync();
 
-            if (artisan == null)
+            if (jobs == null)
             {
                 return NotFound();
             }
-
-            return artisan;
+            return jobs;
         }
 
         [HttpGet("{artisanId}/artisanId")]
           
-         public async Task<ActionResult<Job>> GetArtisanJobs([FromQuery] int artisanId)
+         public async Task<ActionResult<IEnumerable<Job>>> GetArtisanJobs([FromQuery] int artisanId)
         {
-            var job = await _context.Jobs.Include( i => i.Artisan).Include(i => i.Users).SingleAsync(x => x.ArtisanId == artisanId);
+            var job = await _context.Jobs.Include( i => i.Artisan).Include(i => i.Users).Where(x => x.ArtisanId == artisanId).ToListAsync();
 
             if (job == null)
             {

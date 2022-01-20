@@ -9,6 +9,8 @@ namespace multitier.Models {
 
         public string LicenceNumber { get; set; }
 
+        public string profileUrl {get; set;}
+
         public string Description { get; set; }
 
         public string Location {get; set;}
@@ -23,10 +25,7 @@ namespace multitier.Models {
 
         public ICollection<Job> Jobs {get; set;}
 
-        public Artisan()
-        {
-            this.DateJoined = DateTime.UtcNow;
-        }
+        public Artisan() => this.DateJoined = DateTime.UtcNow;
     }
     
 }

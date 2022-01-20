@@ -10,5 +10,8 @@ namespace multitier.Models.DTOs.Requests {
 
         [Required]
         public string Username { get; set; }
+
+
+       
     }
 }

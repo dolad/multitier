@@ -15,6 +15,8 @@ namespace multitier.Models.DTOs.Requests {
         [Required]
         public string Location {get; set;}
 
+        public string profileUrl {get; set;}
+
          [Required]
         public string LicencedOrganization {get; set;}
 

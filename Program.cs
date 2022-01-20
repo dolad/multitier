@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using  Microsoft.IdentityModel.Tokens;
 using multitier.Models;
-using AutoMapper;
+
+
 
 
 
@@ -19,6 +20,7 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(
      options => options.SerializerSettings.ReferenceLoopHandling =            
      Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );;
+
 
 // builder.Services.AddControllers().AddNew
 // this bind the database context to the application;
@@ -51,7 +53,9 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseCors(
+    builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
+);
 app.UseHttpsRedirection();
 app.UseAuthentication();
 
